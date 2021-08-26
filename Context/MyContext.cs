@@ -12,6 +12,13 @@ namespace netcore.Context
         }
 
         public DbSet<Person> Persons { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Phone> Phones { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Account>().HasMany(p => p.Phone).WithOne(a => a.Account);
+        }
 
     }
 

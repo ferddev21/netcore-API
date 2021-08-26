@@ -17,6 +17,5 @@ namespace netcore.Models
         public string Email { get; set; }
         public gender Gender { get; set; }
         public enum gender { Male, Female }
-
     }
 }
