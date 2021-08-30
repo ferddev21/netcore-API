@@ -6,7 +6,7 @@ using netcore.Models;
 
 namespace netcore.Repository.Interface
 {
-    public interface IPersonRepository
+    public interface IOldPersonRepository
     {
         IEnumerable<Person> Get();
         Person Get(string NIK);

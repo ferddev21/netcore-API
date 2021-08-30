@@ -13,8 +13,8 @@ namespace netcore.Models
         public string GPA { get; set; }
 
         public int UniversityId { get; set; }
-        public University Universitys { get; set; }
+        public virtual University Universitys { get; set; }
 
-        public ICollection<Profilling> Profilling { get; set; }
+        public virtual ICollection<Profilling> Profilling { get; set; }
     }
 }

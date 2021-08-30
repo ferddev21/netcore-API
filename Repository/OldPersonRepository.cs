@@ -8,11 +8,11 @@ using System.Linq;
 
 namespace netcore.Repository
 {
-    public class PersonRepository : IPersonRepository
+    public class OldPersonRepository : IOldPersonRepository
     {
         private readonly MyContext myContext;
 
-        public PersonRepository(MyContext myContext)
+        public OldPersonRepository(MyContext myContext)
         {
             this.myContext = myContext;
         }

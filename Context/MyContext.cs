@@ -25,22 +25,22 @@ namespace netcore.Context
         {
             modelBuilder.Entity<Person>()
                 .HasOne(a => a.Account)
-                .WithOne(b => b.Person)
-                .HasForeignKey<Account>(fk => fk.NIK)
+                .WithOne(p => p.Person)
+                .HasForeignKey<Account>(a => a.NIK)
                 .IsRequired(true);
 
             modelBuilder.Entity<Account>()
-                .HasOne(a => a.Profilling)
-                .WithOne(b => b.Account)
-                .HasForeignKey<Profilling>(fk => fk.NIK);
+                .HasOne(p => p.Profilling)
+                .WithOne(a => a.Account)
+                .HasForeignKey<Profilling>(a => a.NIK);
 
             modelBuilder.Entity<Education>()
-                .HasMany(a => a.Profilling)
-                .WithOne(b => b.Educations);
+                .HasMany(pl => pl.Profilling)
+                .WithOne(edu => edu.Educations);
 
             modelBuilder.Entity<University>()
-                .HasMany(a => a.Education)
-                .WithOne(b => b.Universitys);
+                .HasMany(edu => edu.Education)
+                .WithOne(univ => univ.Universitys);
 
             modelBuilder.Entity<Person>().Property(p => p.FirstName).IsRequired(true); //is not null
             modelBuilder.Entity<Person>().Property(p => p.LastName).IsRequired(true); //is not null

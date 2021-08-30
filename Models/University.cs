@@ -10,6 +10,6 @@ namespace netcore.Models
         [Key]
         public int UniversityId { get; set; }
         public string Name { get; set; }
-        public ICollection<Education> Education { get; set; }
+        public virtual ICollection<Education> Education { get; set; }
     }
 }

@@ -12,9 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore.Proxies;
 using netcore.Context;
 using netcore.Models;
 using netcore.Repository;
+using netcore.Repository.Data;
 using netcore.Repository.Interface;
 
 namespace netcore
@@ -32,9 +34,18 @@ namespace netcore
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            //  services.AddControllers();
+            // services.AddScoped<OldPersonRepository>();
+            services.AddScoped<AccountRepository>();
+            services.AddScoped<EducationRepository>();
             services.AddScoped<PersonRepository>();
-            services.AddDbContext<MyContext>(options => options.UseSqlServer(Configuration.GetConnectionString("NetCoreContext")));
+            services.AddScoped<ProfillingRepository>();
+            services.AddScoped<UniversityRepository>();
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
+            services.AddDbContext<MyContext>(options => options.UseSqlServer(Configuration.GetConnectionString("NetCoreContext")).UseLazyLoadingProxies());
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "netcore", Version = "v1" });

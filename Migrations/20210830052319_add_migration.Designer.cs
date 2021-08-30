@@ -10,8 +10,8 @@ using netcore.Context;
 namespace netcore.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20210827051358_add_migrations")]
-    partial class add_migrations
+    [Migration("20210830052319_add_migration")]
+    partial class add_migration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
