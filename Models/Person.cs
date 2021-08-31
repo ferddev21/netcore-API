@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Internal;
+using Newtonsoft.Json;
 
 namespace netcore.Models
 {
@@ -20,6 +18,8 @@ namespace netcore.Models
         public string Email { get; set; }
         public gender Gender { get; set; }
         public enum gender { Male, Female }
+
+        [JsonIgnore]
         public virtual Account Account { get; set; }
     }
 }

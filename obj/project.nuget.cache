@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "SmtCe1+Lw8PDttiUby46nhDqZtFOTfiJ7xsCPxsvC7CdqG2/nyLY18eXkSacJuVaKHHBoaZlBn2lb9zoUwOJKw==",
+  "dgSpecHash": "hYRqveArssS+PIPALWHijoWuDgEE3F/DALRZVspB+oBFLkAGfA7CVzerMFVxOMHqSFgPwEFN1SooVy83AvuFmg==",
   "success": true,
   "projectFilePath": "/home/ferddev21/project/metrodata/web-net/netcore/netcore.csproj",
   "expectedPackageFiles": [
+    "/home/ferddev21/.nuget/packages/bcrypt.net-core/1.6.0/bcrypt.net-core.1.6.0.nupkg.sha512",
     "/home/ferddev21/.nuget/packages/castle.core/4.4.1/castle.core.4.4.1.nupkg.sha512",
     "/home/ferddev21/.nuget/packages/humanizer.core/2.8.26/humanizer.core.2.8.26.nupkg.sha512",
     "/home/ferddev21/.nuget/packages/microsoft.aspnetcore.jsonpatch/3.0.0/microsoft.aspnetcore.jsonpatch.3.0.0.nupkg.sha512",

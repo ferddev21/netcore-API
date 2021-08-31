@@ -6,6 +6,8 @@ namespace netcore.Context
 {
     public class MyContext : DbContext
     {
+        internal object persons;
+
         public MyContext()
         {
         }
@@ -42,20 +44,20 @@ namespace netcore.Context
                 .HasMany(edu => edu.Education)
                 .WithOne(univ => univ.Universitys);
 
-            modelBuilder.Entity<Person>().Property(p => p.FirstName).IsRequired(true); //is not null
-            modelBuilder.Entity<Person>().Property(p => p.LastName).IsRequired(true); //is not null
+            // modelBuilder.Entity<Person>().Property(p => p.FirstName).IsRequired(true); //is not null
+            // modelBuilder.Entity<Person>().Property(p => p.LastName).IsRequired(true); //is not null
             modelBuilder.Entity<Person>().Property(p => p.Phone).IsRequired(false); //is null
-            // modelBuilder.Entity<Person>().Property(p => p.BirthDate).IsRequired(false); //is null
-            modelBuilder.Entity<Person>().Property(p => p.Salary).IsRequired(true); //is not null
-            modelBuilder.Entity<Person>().Property(p => p.Email).IsRequired(true); //is not null
-            modelBuilder.Entity<Person>().Property(p => p.Gender).IsRequired(true); //is not null
+            // // modelBuilder.Entity<Person>().Property(p => p.BirthDate).IsRequired(false); //is null
+            // modelBuilder.Entity<Person>().Property(p => p.Salary).IsRequired(true); //is not null
+            // modelBuilder.Entity<Person>().Property(p => p.Email).IsRequired(true); //is not null
+            // modelBuilder.Entity<Person>().Property(p => p.Gender).IsRequired(true); //is not null
 
-            modelBuilder.Entity<Account>().Property(p => p.Password).IsRequired(true); //is not null
+            // modelBuilder.Entity<Account>().Property(p => p.Password).IsRequired(true); //is not null
 
-            modelBuilder.Entity<Education>().Property(p => p.Degree).IsRequired(true); //is not null
-            modelBuilder.Entity<Education>().Property(p => p.GPA).IsRequired(true); //is not null
+            // modelBuilder.Entity<Education>().Property(p => p.Degree).IsRequired(true); //is not null
+            // modelBuilder.Entity<Education>().Property(p => p.GPA).IsRequired(true); //is not null
 
-            modelBuilder.Entity<University>().Property(p => p.Name).IsRequired(true); //is not null
+            // modelBuilder.Entity<University>().Property(p => p.Name).IsRequired(true); //is not null
 
 
         }

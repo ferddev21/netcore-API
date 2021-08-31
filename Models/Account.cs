@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace netcore.Models
 {
@@ -14,7 +13,11 @@ namespace netcore.Models
         [ForeignKey("Person")]
         public string NIK { get; set; } //Primary Key
         public string Password { get; set; }
+
+        [JsonIgnore]
         public virtual Profilling Profilling { get; set; }
+
+        [JsonIgnore]
         public virtual Person Person { get; set; }
 
     }
