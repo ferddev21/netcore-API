@@ -101,6 +101,30 @@ namespace netcore.Migrations
                     b.ToTable("tb_m_profillings");
                 });
 
+            modelBuilder.Entity("netcore.Models.ResetPassword", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NIK")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OTP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tb_m_reset_passwords");
+                });
+
             modelBuilder.Entity("netcore.Models.University", b =>
                 {
                     b.Property<int>("UniversityId")

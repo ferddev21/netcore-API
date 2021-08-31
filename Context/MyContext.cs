@@ -6,7 +6,7 @@ namespace netcore.Context
 {
     public class MyContext : DbContext
     {
-        internal object persons;
+        ////internal object persons;
 
         public MyContext()
         {
@@ -22,6 +22,7 @@ namespace netcore.Context
         public DbSet<Profilling> Profillings { get; set; }
         public DbSet<Education> Educations { get; set; }
         public DbSet<University> Universitys { get; set; }
+        public DbSet<ResetPassword> ResetPasswords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

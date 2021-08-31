@@ -10,8 +10,8 @@ using netcore.Context;
 namespace netcore.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20210831123949_add_migrations")]
-    partial class add_migrations
+    [Migration("20210831164519_add_migration")]
+    partial class add_migration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -101,6 +101,30 @@ namespace netcore.Migrations
                     b.HasIndex("EducationId");
 
                     b.ToTable("tb_m_profillings");
+                });
+
+            modelBuilder.Entity("netcore.Models.ResetPassword", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NIK")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OTP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tb_m_reset_passwords");
                 });
 
             modelBuilder.Entity("netcore.Models.University", b =>
