@@ -111,7 +111,7 @@ namespace netcore.Repository.Data
                 Password = BCrypt.Net.BCrypt.HashPassword(registerVM.Password)
             });
             myContext.SaveChanges();
-
+            int test = registerVM.UniversityId;
             //save enitity education
             Education education = new Education(registerVM.Degree, registerVM.GPA, (int)registerVM.UniversityId);
             myContext.Educations.Add(education);
@@ -147,24 +147,6 @@ namespace netcore.Repository.Data
 
             return "1";
 
-        }
-
-        public LoginVM Login(LoginVM login)
-        {
-            if (dbSet.Where(per => per.Email == login.Email).Count() <= 0)
-            {
-                return null;
-            }
-
-            return (from per in myContext.Persons
-                    join acc in myContext.Accounts
-                    on per.NIK equals acc.NIK
-                    select new LoginVM
-                    {
-                        Email = per.Email,
-                        Password = acc.Password,
-                    }
-         ).Where(per => per.Email == login.Email).First();
         }
     }
 }

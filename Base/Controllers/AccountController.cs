@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using netcore.Models;
 using netcore.Repository.Data;
 using netcore.Repository.StaticMethods;
+using netcore.ViewModel;
 
 namespace netcore.Base.Controllers
 {
@@ -19,6 +20,50 @@ namespace netcore.Base.Controllers
         {
             this.repository = repository;
         }
+
+        [HttpPost("login")]
+        public ActionResult Login(LoginVM loginVM)
+        {
+            try
+            {
+                //check data by email
+                var checkdata = repository.Login(loginVM);
+                if (checkdata == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new
+                    {
+                        status = (int)HttpStatusCode.BadRequest,
+                        message = "Email tidak ditemukan di database kami"
+                    });
+                }
+
+                //check password bycrpt
+                if (!BCrypt.Net.BCrypt.Verify(loginVM.Password, checkdata.Password))
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new
+                    {
+                        status = (int)HttpStatusCode.BadRequest,
+                        message = "Password Salah"
+                    });
+                }
+
+                return StatusCode((int)HttpStatusCode.OK, new
+                {
+                    status = (int)HttpStatusCode.OK,
+                    message = "Success Login",
+                });
+
+            }
+            catch (System.Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new
+                {
+                    status = (int)HttpStatusCode.InternalServerError,
+                    message = e.Message
+                });
+            }
+        }
+
 
         [HttpPost("SendPasswordResetCode")]
         public ActionResult SendPasswordResetCode([FromForm] string email)

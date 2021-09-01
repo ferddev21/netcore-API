@@ -19,6 +19,8 @@ namespace netcore.Repository.Data
             this.myContext = myContext;
             dbSet = myContext.Set<Account>();
         }
+
+
         public IEnumerable<LoginVM> GetLoginVMs()
         {
             var getLoginVMs = (from per in myContext.Persons
@@ -36,6 +38,24 @@ namespace netcore.Repository.Data
                 return null;
             }
             return getLoginVMs.ToList();
+        }
+
+        public LoginVM Login(LoginVM login)
+        {
+            if (myContext.Persons.Where(per => per.Email == login.Email).Count() <= 0)
+            {
+                return null;
+            }
+
+            return (from per in myContext.Persons
+                    join acc in myContext.Accounts
+                    on per.NIK equals acc.NIK
+                    select new LoginVM
+                    {
+                        Email = per.Email,
+                        Password = acc.Password,
+                    }
+         ).Where(per => per.Email == login.Email).First();
         }
 
         public LoginVM FindByEmail(string email)
