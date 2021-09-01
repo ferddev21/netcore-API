@@ -65,11 +65,13 @@ namespace netcore.Base.Controllers
         }
 
 
+
+
         [HttpPost("SendPasswordResetCode")]
-        public ActionResult SendPasswordResetCode([FromForm] string email)
+        public ActionResult SendPasswordResetCode(LoginVM loginVM)
         {
             //validating
-            if (string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(loginVM.Email))
             {
                 return StatusCode((int)HttpStatusCode.BadRequest, new
                 {
@@ -81,7 +83,7 @@ namespace netcore.Base.Controllers
             try
             {
                 //check email
-                var account = repository.FindByEmail(email);
+                var account = repository.FindByEmail(loginVM.Email);
 
                 if (account == null)
                 {
@@ -103,14 +105,14 @@ namespace netcore.Base.Controllers
                 repository.SaveResetPassword(account.Email, otp, account.NIK);
 
                 //send otp to email
-                EmailSender.SendEmail(email, "Reset Password OTP", "Hello "
-                              + email + "<br><br>berikut Kode OTP anda<br><br><b>"
+                EmailSender.SendEmail(loginVM.Email, "Reset Password OTP", "Hello "
+                              + loginVM.Email + "<br><br>berikut Kode OTP anda<br><br><b>"
                               + otp + "<b><br><br>Thanks<br>netcore-api.com");
 
                 return StatusCode((int)HttpStatusCode.OK, new
                 {
                     status = (int)HttpStatusCode.OK,
-                    message = "OTP berhasil dikirim ke email " + email + "."
+                    message = "OTP berhasil dikirim ke email " + loginVM.Email + "."
                 });
 
 
@@ -125,11 +127,73 @@ namespace netcore.Base.Controllers
             }
         }
 
-        [HttpPost("ResetPassword")]
-        public ActionResult ResetPassword([FromForm] string email, [FromForm] int otp, [FromForm] string newPassword)
+        [HttpPost("SendPasswordReset")]
+        public ActionResult SendPasswordReset(LoginVM loginVM)
         {
             //validating
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(newPassword))
+            if (string.IsNullOrEmpty(loginVM.Email))
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, new
+                {
+                    status = (int)HttpStatusCode.BadRequest,
+                    message = "Email tidak boleh null atau kosong"
+                });
+            }
+
+            try
+            {
+                //check email
+                var account = repository.FindByEmail(loginVM.Email);
+
+                if (account == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new
+                    {
+                        status = (int)HttpStatusCode.BadRequest,
+                        message = "Email tidak terdaftar"
+                    });
+                }
+
+                //Generate Reset password
+                string resetPassword = repository.GetRandomAlphanumericString(8);
+
+                //Reset password
+                if (repository.ResetPassword(account.NIK, resetPassword))
+                {
+                    //send password to email
+                    EmailSender.SendEmail(loginVM.Email, "Reset Password", "Hello "
+                                  + loginVM.Email + "<br><br>berikut reset password anda, jangan lupa ganti dengan password baru<br><br><b>"
+                                  + resetPassword + "<b><br><br>Thanks<br>netcore-api.com");
+
+                    return StatusCode((int)HttpStatusCode.OK, new
+                    {
+                        status = (int)HttpStatusCode.OK,
+                        message = "reset Password berhasil dikirim ke email " + loginVM.Email + "."
+                    });
+                }
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, new
+                {
+                    status = (int)HttpStatusCode.InternalServerError,
+                    message = "Gagal reset password"
+                });
+
+            }
+            catch (System.Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new
+                {
+                    status = (int)HttpStatusCode.InternalServerError,
+                    message = e.Message
+                });
+            }
+        }
+
+        [HttpPost("ResetPassword")]
+        public ActionResult ResetPassword(LoginVM loginVM)
+        {
+            //validating
+            if (string.IsNullOrEmpty(loginVM.Email) || string.IsNullOrEmpty(loginVM.NewPassword))
             {
                 return StatusCode((int)HttpStatusCode.BadRequest, new
                 {
@@ -139,7 +203,7 @@ namespace netcore.Base.Controllers
             }
 
             //check email
-            var account = repository.FindByEmail(email);
+            var account = repository.FindByEmail(loginVM.Email);
 
             if (account == null)
             {
@@ -153,7 +217,57 @@ namespace netcore.Base.Controllers
             return StatusCode((int)HttpStatusCode.OK, new
             {
                 status = (int)HttpStatusCode.OK,
-                message = repository.ResetPassword(account.NIK, otp, newPassword)
+                message = repository.ResetPassword(account.NIK, loginVM.OTP, loginVM.NewPassword)
+            });
+
+        }
+
+        [HttpPost("ChangePassword")]
+        public ActionResult ChangePassword(LoginVM loginVM)
+        {
+            //validating
+            if (string.IsNullOrEmpty(loginVM.Email) || string.IsNullOrEmpty(loginVM.Password) || string.IsNullOrEmpty(loginVM.NewPassword))
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, new
+                {
+                    status = (int)HttpStatusCode.BadRequest,
+                    message = "Email dan password tidak boleh null atau kosong"
+                });
+            }
+
+            //check email
+            var account = repository.FindByEmail(loginVM.Email);
+
+            if (account == null)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, new
+                {
+                    status = (int)HttpStatusCode.BadRequest,
+                    message = "Email tidak terdaftar"
+                });
+            }
+
+            //check password match
+            if (!BCrypt.Net.BCrypt.Verify(loginVM.Password, account.Password))
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, new
+                {
+                    status = (int)HttpStatusCode.BadRequest,
+                    message = "Password Salah"
+                });
+            }
+
+            //change password
+            repository.Update(new Account
+            {
+                NIK = account.NIK,
+                Password = BCrypt.Net.BCrypt.HashPassword(loginVM.NewPassword)
+            });
+
+            return StatusCode((int)HttpStatusCode.OK, new
+            {
+                status = (int)HttpStatusCode.OK,
+                message = "ubah password berhasil"
             });
 
         }
