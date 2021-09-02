@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-
 namespace netcore.ViewModel
 {
     public class RegisterVM
@@ -14,7 +13,7 @@ namespace netcore.ViewModel
         public int Gender { get; set; }
         public int Salary { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
+        public string Password { internal get; set; }
         public string Degree { get; set; }
         public string GPA { get; set; }
         public int UniversityId { get; set; }

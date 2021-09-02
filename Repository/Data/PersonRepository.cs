@@ -54,7 +54,7 @@ namespace netcore.Repository.Data
 
         public RegisterVM GetRegister(string NIK)
         {
-            if (dbSet.Find(NIK) == null)
+            if (myContext.Profillings.Find(NIK) == null)
             {
                 return null;
             }
@@ -108,7 +108,7 @@ namespace netcore.Repository.Data
             myContext.Accounts.Add(new Account()
             {
                 NIK = registerVM.NIK,
-                Password = BCrypt.Net.BCrypt.HashPassword(registerVM.Password)
+                Password = BCrypt.Net.BCrypt.HashPassword(registerVM.Password, BCrypt.Net.BCrypt.GenerateSalt(12))
             });
             myContext.SaveChanges();
             int test = registerVM.UniversityId;

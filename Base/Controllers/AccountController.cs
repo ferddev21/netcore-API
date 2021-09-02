@@ -100,12 +100,13 @@ namespace netcore.Base.Controllers
                 //Generate OTP 5 Digit
                 Random r = new Random();
                 int otp = r.Next(10000, 99999);
+                string subjectMail = "Reset Password OTP [" + DateTime.Now + "]";
 
                 //save into database
                 repository.SaveResetPassword(account.Email, otp, account.NIK);
 
                 //send otp to email
-                EmailSender.SendEmail(loginVM.Email, "Reset Password OTP", "Hello "
+                EmailSender.SendEmail(loginVM.Email, subjectMail, "Hello "
                               + loginVM.Email + "<br><br>berikut Kode OTP anda<br><br><b>"
                               + otp + "<b><br><br>Thanks<br>netcore-api.com");
 
@@ -154,14 +155,16 @@ namespace netcore.Base.Controllers
                     });
                 }
 
-                //Generate Reset password
+                //Generate Reset password with random alphanumstring
                 string resetPassword = repository.GetRandomAlphanumericString(8);
-
+                //Generate Reset password with GUID
+                //string resetPassword = System.Guid.NewGuid().ToString();
+                string subjectMail = "Reset Password [" + DateTime.Now + "]";
                 //Reset password
                 if (repository.ResetPassword(account.NIK, resetPassword))
                 {
                     //send password to email
-                    EmailSender.SendEmail(loginVM.Email, "Reset Password", "Hello "
+                    EmailSender.SendEmail(loginVM.Email, subjectMail, "Hello "
                                   + loginVM.Email + "<br><br>berikut reset password anda, jangan lupa ganti dengan password baru<br><br><b>"
                                   + resetPassword + "<b><br><br>Thanks<br>netcore-api.com");
 

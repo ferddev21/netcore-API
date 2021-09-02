@@ -101,7 +101,7 @@ namespace netcore.Repository.Data
         public string ResetPassword(string nik, string otp, string newPassword)
         {
             // check otp
-            var dataReset = myContext.ResetPasswords.Where(o => o.OTP == otp.ToString()).FirstOrDefault();
+            var dataReset = myContext.ResetPasswords.Where(o => o.OTP == otp).Where(o => o.NIK == nik).FirstOrDefault();
             if (dataReset == null)
             {
                 return "Kode OTP Salah";
@@ -117,7 +117,7 @@ namespace netcore.Repository.Data
             dbSet.Update(new Account()
             {
                 NIK = nik,
-                Password = BCrypt.Net.BCrypt.HashPassword(newPassword)
+                Password = BCrypt.Net.BCrypt.HashPassword(newPassword, BCrypt.Net.BCrypt.GenerateSalt(12))
             });
             myContext.SaveChanges();
 
@@ -133,7 +133,7 @@ namespace netcore.Repository.Data
             dbSet.Update(new Account()
             {
                 NIK = nik,
-                Password = BCrypt.Net.BCrypt.HashPassword(newPassword)
+                Password = BCrypt.Net.BCrypt.HashPassword(newPassword, BCrypt.Net.BCrypt.GenerateSalt(12))
             });
             myContext.SaveChanges();
 
