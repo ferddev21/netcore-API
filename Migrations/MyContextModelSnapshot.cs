@@ -25,9 +25,15 @@ namespace netcore.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
                     b.HasKey("NIK");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("tb_m_accounts");
                 });
@@ -40,9 +46,11 @@ namespace netcore.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Degree")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GPA")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UniversityId")
@@ -125,6 +133,21 @@ namespace netcore.Migrations
                     b.ToTable("tb_m_reset_passwords");
                 });
 
+            modelBuilder.Entity("netcore.Models.Role", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RoleId");
+
+                    b.ToTable("tb_m_roles");
+                });
+
             modelBuilder.Entity("netcore.Models.University", b =>
                 {
                     b.Property<int>("UniversityId")
@@ -133,6 +156,7 @@ namespace netcore.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UniversityId");
@@ -148,7 +172,15 @@ namespace netcore.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("netcore.Models.Role", "Roles")
+                        .WithMany("Account")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Person");
+
+                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("netcore.Models.Education", b =>
@@ -192,6 +224,11 @@ namespace netcore.Migrations
                 });
 
             modelBuilder.Entity("netcore.Models.Person", b =>
+                {
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("netcore.Models.Role", b =>
                 {
                     b.Navigation("Account");
                 });

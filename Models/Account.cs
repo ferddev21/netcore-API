@@ -19,5 +19,9 @@ namespace netcore.Models
         [JsonIgnore]
         public virtual Person Person { get; set; }
 
+        public int RoleId { get; set; }
+
+        public virtual Role Roles { get; set; }
+
     }
 }

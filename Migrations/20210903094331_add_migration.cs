@@ -42,12 +42,25 @@ namespace netcore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "tb_m_roles",
+                columns: table => new
+                {
+                    RoleId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tb_m_roles", x => x.RoleId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tb_m_universitys",
                 columns: table => new
                 {
                     UniversityId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,7 +72,8 @@ namespace netcore.Migrations
                 columns: table => new
                 {
                     NIK = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,6 +84,12 @@ namespace netcore.Migrations
                         principalTable: "tb_m_persons",
                         principalColumn: "NIK",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tb_m_accounts_tb_m_roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "tb_m_roles",
+                        principalColumn: "RoleId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,8 +98,8 @@ namespace netcore.Migrations
                 {
                     EducationId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Degree = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    GPA = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Degree = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GPA = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UniversityId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -118,6 +138,11 @@ namespace netcore.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_tb_m_accounts_RoleId",
+                table: "tb_m_accounts",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_tb_m_educations_UniversityId",
                 table: "tb_m_educations",
                 column: "UniversityId");
@@ -144,6 +169,9 @@ namespace netcore.Migrations
 
             migrationBuilder.DropTable(
                 name: "tb_m_persons");
+
+            migrationBuilder.DropTable(
+                name: "tb_m_roles");
 
             migrationBuilder.DropTable(
                 name: "tb_m_universitys");

@@ -44,8 +44,12 @@ namespace netcore.ViewModel
         public string Degree { get; set; }
         [Required(ErrorMessage = "GPA tidak boleh kosong")]
         public string GPA { get; set; }
+
         [Required(ErrorMessage = "UniversityId tidak boleh kosong")]
         public int UniversityId { get; set; }
+
+        [Required(ErrorMessage = "RoleId tidak boleh kosong")]
+        public int RoleId { get; set; }
 
     }
 }

@@ -36,6 +36,7 @@ namespace netcore
 
             //  services.AddControllers();
             // services.AddScoped<OldPersonRepository>();
+            services.AddScoped<RoleRepository>();
             services.AddScoped<AccountRepository>();
             services.AddScoped<EducationRepository>();
             services.AddScoped<PersonRepository>();

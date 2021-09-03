@@ -23,6 +23,8 @@ namespace netcore.Repository.Data
             var getRegisterVM = (from per in myContext.Persons
                                  join acc in myContext.Accounts on
                                  per.NIK equals acc.NIK
+                                 join role in myContext.Roles on
+                                 acc.RoleId equals role.RoleId
                                  join prf in myContext.Profillings on
                                  acc.NIK equals prf.NIK
                                  join edu in myContext.Educations on
@@ -41,7 +43,8 @@ namespace netcore.Repository.Data
                                      Password = acc.Password,
                                      Degree = edu.Degree,
                                      GPA = edu.GPA,
-                                     UniversityId = edu.UniversityId
+                                     UniversityId = edu.UniversityId,
+                                     RoleId = acc.RoleId
                                  }).ToList();
 
 
@@ -63,6 +66,8 @@ namespace netcore.Repository.Data
             return (from per in myContext.Persons
                     join acc in myContext.Accounts on
                     per.NIK equals acc.NIK
+                    join role in myContext.Roles on
+                    acc.RoleId equals role.RoleId
                     join prf in myContext.Profillings on
                     acc.NIK equals prf.NIK
                     join edu in myContext.Educations on
@@ -83,7 +88,8 @@ namespace netcore.Repository.Data
                         Password = acc.Password,
                         Degree = edu.Degree,
                         GPA = edu.GPA,
-                        UniversityId = univ.UniversityId
+                        UniversityId = univ.UniversityId,
+                        RoleId = acc.RoleId
                     }).Where(per => per.NIK == NIK).First();
         }
 
@@ -108,10 +114,11 @@ namespace netcore.Repository.Data
             myContext.Accounts.Add(new Account()
             {
                 NIK = registerVM.NIK,
-                Password = BCrypt.Net.BCrypt.HashPassword(registerVM.Password, BCrypt.Net.BCrypt.GenerateSalt(12))
+                Password = BCrypt.Net.BCrypt.HashPassword(registerVM.Password, BCrypt.Net.BCrypt.GenerateSalt(12)),
+                RoleId = registerVM.RoleId
             });
             myContext.SaveChanges();
-            int test = registerVM.UniversityId;
+
             //save enitity education
             Education education = new Education(registerVM.Degree, registerVM.GPA, (int)registerVM.UniversityId);
             myContext.Educations.Add(education);
