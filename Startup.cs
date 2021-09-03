@@ -48,7 +48,7 @@ namespace netcore
             services.AddDbContext<MyContext>(options => options.UseSqlServer(Configuration.GetConnectionString("NetCoreContext")).UseLazyLoadingProxies());
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "netcore", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "netcore API", Version = "v1" });
             });
         }
 

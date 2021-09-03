@@ -10,6 +10,7 @@ namespace netcore.Models
     {
         [Key]
         public int UniversityId { get; set; }
+        [Required(ErrorMessage = "Nama Universitas tidak boleh kosong")]
         public string Name { get; set; }
 
         [JsonIgnore]

@@ -17,7 +17,9 @@ namespace netcore.Models
 
         [Key]
         public int EducationId { get; set; }
+        [Required]
         public string Degree { get; set; }
+        [Required]
         public string GPA { get; set; }
 
         public int UniversityId { get; set; }

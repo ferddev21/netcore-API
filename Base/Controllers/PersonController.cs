@@ -74,7 +74,7 @@ namespace netcore.Base.Controllers
         {
             try
             {
-                string massage = repository.Validation(registerVM.NIK, registerVM.Email, registerVM.Phone);
+                string massage = repository.ValidationUnique(registerVM.NIK, registerVM.Email, registerVM.Phone);
                 if (massage != "1")
                 {
                     return StatusCode((int)HttpStatusCode.BadGateway, new

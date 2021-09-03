@@ -256,7 +256,7 @@ namespace netcore.Base.Controllers
                 return StatusCode((int)HttpStatusCode.BadRequest, new
                 {
                     status = (int)HttpStatusCode.BadRequest,
-                    message = "Password Salah"
+                    message = "Password lama salah"
                 });
             }
 
@@ -270,7 +270,7 @@ namespace netcore.Base.Controllers
             return StatusCode((int)HttpStatusCode.OK, new
             {
                 status = (int)HttpStatusCode.OK,
-                message = "ubah password berhasil"
+                message = "Password berhasil diupdate"
             });
 
         }

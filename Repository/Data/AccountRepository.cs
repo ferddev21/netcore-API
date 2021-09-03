@@ -21,8 +21,6 @@ namespace netcore.Repository.Data
             this.myContext = myContext;
             dbSet = myContext.Set<Account>();
         }
-
-
         public IEnumerable<LoginVM> GetLoginVMs()
         {
             var getLoginVMs = (from per in myContext.Persons

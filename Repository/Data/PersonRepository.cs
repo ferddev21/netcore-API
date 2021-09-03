@@ -127,9 +127,8 @@ namespace netcore.Repository.Data
             return myContext.SaveChanges();
         }
 
-        public string Validation(string nik, string email, string phone)
+        public string ValidationUnique(string nik, string email, string phone)
         {
-
             if (dbSet.Find(nik) != null)
             {
                 return "NIK sudah ada";
@@ -146,7 +145,6 @@ namespace netcore.Repository.Data
             }
 
             return "1";
-
         }
     }
 }

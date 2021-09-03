@@ -1,10 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
-
 namespace netcore.Models
 {
-
 
     [Table("tb_m_accounts")]
     public class Account
@@ -12,6 +10,7 @@ namespace netcore.Models
         [Key] //Anontation
         [ForeignKey("Person")]
         public string NIK { get; set; } //Primary Key
+        [Required, MinLength(8)]
         public string Password { get; set; }
 
         [JsonIgnore]
