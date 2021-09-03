@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using netcore.Models;
@@ -10,6 +11,7 @@ using netcore.ViewModel;
 
 namespace netcore.Base.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : BaseController<Account, AccountRepository, string>

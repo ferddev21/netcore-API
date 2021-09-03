@@ -67,3 +67,4 @@
 /home/ferddev21/project/metrodata/web-net/netcore/bin/Debug/net5.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 /home/ferddev21/project/metrodata/web-net/netcore/bin/Debug/net5.0/Newtonsoft.Json.Bson.dll
 /home/ferddev21/project/metrodata/web-net/netcore/bin/Debug/net5.0/BCrypt.Net-Core.dll
+/home/ferddev21/project/metrodata/web-net/netcore/bin/Debug/net5.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll

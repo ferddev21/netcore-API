@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using netcore.Models;
@@ -7,6 +8,7 @@ using netcore.ViewModel;
 
 namespace netcore.Base.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PersonController : BaseController<Person, PersonRepository, string>
@@ -69,6 +71,7 @@ namespace netcore.Base.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public ActionResult InsertRegister(RegisterVM registerVM)
         {

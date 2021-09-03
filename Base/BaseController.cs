@@ -1,9 +1,11 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using netcore.Repository.Interface;
 
 namespace netcore.Base
 {
+    // [Authorize(Roles = "Manager")]
     [ApiController]
     [Route("api/[controller]")]
     public class BaseController<Entity, Repository, Key> : ControllerBase
