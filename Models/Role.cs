@@ -13,6 +13,6 @@ namespace netcore.Models
         public string Name { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<Account> Account { get; set; }
+        public virtual ICollection<AccountRole> AccountRoles { get; set; }
     }
 }

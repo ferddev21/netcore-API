@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
@@ -19,9 +20,8 @@ namespace netcore.Models
         [JsonIgnore]
         public virtual Person Person { get; set; }
 
-        public int RoleId { get; set; }
 
-        public virtual Role Roles { get; set; }
+        public virtual ICollection<AccountRole> AccountRoles { get; set; }
 
     }
 }

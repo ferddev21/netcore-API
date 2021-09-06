@@ -40,24 +40,6 @@ namespace netcore.Repository.Data
             return getLoginVMs.ToList();
         }
 
-        public LoginVM Login(LoginVM login)
-        {
-            if (myContext.Persons.Where(per => per.Email == login.Email).Count() <= 0)
-            {
-                return null;
-            }
-
-            return (from per in myContext.Persons
-                    join acc in myContext.Accounts
-                    on per.NIK equals acc.NIK
-                    select new LoginVM
-                    {
-                        Email = per.Email,
-                        Password = acc.Password,
-                    }
-         ).Where(per => per.Email == login.Email).First();
-        }
-
         public LoginVM FindByEmail(string email)
         {
             var data = myContext.Persons.Where(b => b.Email == email);
@@ -73,8 +55,24 @@ namespace netcore.Repository.Data
                             Password = acc.Password
                         }).Where(per => per.Email == email).First();
             }
-
             return null;
+        }
+
+        public IEnumerable<RoleVM> getRole(string nIK)
+        {
+            var RoleVMs = (from acc in myContext.Accounts
+                           join ar in myContext.AccountRoles on
+                           acc.NIK equals ar.NIK
+                           join r in myContext.Roles on
+                            ar.RoleId equals r.RoleId
+                           select new RoleVM
+                           {
+                               NIK = acc.NIK,
+                               RoleName = r.Name
+                           }).Where(ar => ar.NIK == nIK);
+
+            return RoleVMs.ToList();
+
         }
 
         public bool SaveResetPassword(string email, int otp, string nik)
@@ -89,11 +87,6 @@ namespace netcore.Repository.Data
             myContext.ResetPasswords.Add(resetPassword);
             myContext.SaveChanges();
             return true;
-        }
-
-        internal object GeneratePasswordResetToken()
-        {
-            throw new NotImplementedException();
         }
 
         public string ResetPassword(string nik, string otp, string newPassword)

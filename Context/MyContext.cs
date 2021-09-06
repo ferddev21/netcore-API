@@ -23,6 +23,7 @@ namespace netcore.Context
         public DbSet<Education> Educations { get; set; }
         public DbSet<University> Universitys { get; set; }
         public DbSet<ResetPassword> ResetPasswords { get; set; }
+        public DbSet<AccountRole> AccountRoles { get; set; }
         public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,6 +39,17 @@ namespace netcore.Context
                 .WithOne(a => a.Account)
                 .HasForeignKey<Profilling>(a => a.NIK);
 
+            modelBuilder.Entity<AccountRole>()
+                .HasKey(ar => new { ar.NIK, ar.RoleId });
+
+            modelBuilder.Entity<Account>()
+                .HasMany(a => a.AccountRoles)
+                .WithOne(r => r.Accounts);
+
+            modelBuilder.Entity<Role>()
+                .HasMany(a => a.AccountRoles)
+                .WithOne(r => r.Roles);
+
             modelBuilder.Entity<Education>()
                 .HasMany(pl => pl.Profilling)
                 .WithOne(edu => edu.Educations);
@@ -46,9 +58,7 @@ namespace netcore.Context
                 .HasMany(edu => edu.Education)
                 .WithOne(univ => univ.Universitys);
 
-            modelBuilder.Entity<Role>()
-                .HasMany(a => a.Account)
-                .WithOne(r => r.Roles);
+
 
             // modelBuilder.Entity<Person>().Property(p => p.FirstName).IsRequired(true); //is not null
             // modelBuilder.Entity<Person>().Property(p => p.LastName).IsRequired(true); //is not null

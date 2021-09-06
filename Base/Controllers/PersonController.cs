@@ -1,7 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using netcore.Models;
 using netcore.Repository.Data;
 using netcore.ViewModel;
@@ -14,9 +13,11 @@ namespace netcore.Base.Controllers
     public class PersonController : BaseController<Person, PersonRepository, string>
     {
         private readonly PersonRepository repository;
-        public PersonController(PersonRepository repository) : base(repository)
+        private readonly RoleRepository roleRepository;
+        public PersonController(PersonRepository repository, RoleRepository roleRepository) : base(repository)
         {
             this.repository = repository;
+            this.roleRepository = roleRepository;
         }
 
         [HttpGet("register")]
@@ -45,35 +46,32 @@ namespace netcore.Base.Controllers
             }
         }
 
+
         [HttpGet("register/{NIK}")]
         public ActionResult GetRegister(string NIK)
         {
             var data = repository.GetRegister(NIK);
             if (data == null)
             {
-                return StatusCode((int)HttpStatusCode.NotFound, new
+                return NotFound(new
                 {
-
-                    status = (int)HttpStatusCode.NoContent,
-                    result = data,
-                    message = "Data tidak ditemukan",
-
+                    StatusCode = HttpStatusCode.NoContent,
+                    Result = data,
+                    Message = "Data Tidak Ditemukan"
                 });
             }
-            else
+
+            return Ok(new
             {
-                return StatusCode((int)HttpStatusCode.OK, new
-                {
-                    status = (int)HttpStatusCode.OK,
-                    result = data,
-                    message = "Success",
-                });
-            }
+                StatusCode = HttpStatusCode.OK,
+                result = data,
+                message = "Success",
+            });
         }
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public ActionResult InsertRegister(RegisterVM registerVM)
+        public object InsertRegister(RegisterVM registerVM)
         {
             try
             {
@@ -82,16 +80,19 @@ namespace netcore.Base.Controllers
                 {
                     return StatusCode((int)HttpStatusCode.BadGateway, new
                     {
-                        status = (int)HttpStatusCode.BadGateway,
+                        StatusCode = (int)HttpStatusCode.BadGateway,
                         message = massage
                     });
                 }
 
+                //check role user
+                registerVM.RoleId = roleRepository.getIdByName("User");
+
                 if (repository.InsertRegister(registerVM) == 1)
                 {
-                    return StatusCode((int)HttpStatusCode.Created, new
+                    return Ok(new
                     {
-                        status = (int)HttpStatusCode.Created,
+                        StatusCode = HttpStatusCode.OK,
                         message = "Success register"
                     });
                 };
@@ -101,7 +102,32 @@ namespace netcore.Base.Controllers
                     status = (int)HttpStatusCode.BadGateway,
                     message = "Gagal Register"
                 });
+            }
+            catch (System.Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new
+                {
+                    status = (int)HttpStatusCode.InternalServerError,
+                    message = e.Message
+                });
+            }
+        }
 
+
+        [HttpPost("addrole")]
+        public ActionResult AddAccountRole(AccountRole accountRole)
+        {
+            try
+            {
+                var test = accountRole;
+
+                repository.AddNewAccountRole(accountRole.NIK, accountRole.RoleId);
+
+                return StatusCode((int)HttpStatusCode.Created, new
+                {
+                    status = (int)HttpStatusCode.Created,
+                    message = "Success created"
+                });
 
             }
             catch (System.Exception e)
@@ -112,7 +138,7 @@ namespace netcore.Base.Controllers
                     message = e.Message
                 });
             }
-
         }
+
     }
 }

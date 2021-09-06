@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace netcore.Models
 {
@@ -16,6 +17,8 @@ namespace netcore.Models
         public DateTime BirthDate { get; set; }
         public int Salary { get; set; }
         public string Email { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
         public gender Gender { get; set; }
         public enum gender { Male, Female }
 

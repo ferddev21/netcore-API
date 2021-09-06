@@ -72,8 +72,7 @@ namespace netcore.Migrations
                 columns: table => new
                 {
                     NIK = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -83,12 +82,6 @@ namespace netcore.Migrations
                         column: x => x.NIK,
                         principalTable: "tb_m_persons",
                         principalColumn: "NIK",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_tb_m_accounts_tb_m_roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "tb_m_roles",
-                        principalColumn: "RoleId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -110,6 +103,30 @@ namespace netcore.Migrations
                         column: x => x.UniversityId,
                         principalTable: "tb_m_universitys",
                         principalColumn: "UniversityId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tb_m_accountroles",
+                columns: table => new
+                {
+                    NIK = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tb_m_accountroles", x => new { x.NIK, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_tb_m_accountroles_tb_m_accounts_NIK",
+                        column: x => x.NIK,
+                        principalTable: "tb_m_accounts",
+                        principalColumn: "NIK",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tb_m_accountroles_tb_m_roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "tb_m_roles",
+                        principalColumn: "RoleId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -138,8 +155,8 @@ namespace netcore.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_tb_m_accounts_RoleId",
-                table: "tb_m_accounts",
+                name: "IX_tb_m_accountroles_RoleId",
+                table: "tb_m_accountroles",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
@@ -156,10 +173,16 @@ namespace netcore.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "tb_m_accountroles");
+
+            migrationBuilder.DropTable(
                 name: "tb_m_profillings");
 
             migrationBuilder.DropTable(
                 name: "tb_m_reset_passwords");
+
+            migrationBuilder.DropTable(
+                name: "tb_m_roles");
 
             migrationBuilder.DropTable(
                 name: "tb_m_accounts");
@@ -169,9 +192,6 @@ namespace netcore.Migrations
 
             migrationBuilder.DropTable(
                 name: "tb_m_persons");
-
-            migrationBuilder.DropTable(
-                name: "tb_m_roles");
 
             migrationBuilder.DropTable(
                 name: "tb_m_universitys");

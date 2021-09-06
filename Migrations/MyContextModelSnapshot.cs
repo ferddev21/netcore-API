@@ -28,14 +28,24 @@ namespace netcore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.HasKey("NIK");
+
+                    b.ToTable("tb_m_accounts");
+                });
+
+            modelBuilder.Entity("netcore.Models.AccountRole", b =>
+                {
+                    b.Property<string>("NIK")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.HasKey("NIK");
+                    b.HasKey("NIK", "RoleId");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("tb_m_accounts");
+                    b.ToTable("tb_m_accountroles");
                 });
 
             modelBuilder.Entity("netcore.Models.Education", b =>
@@ -172,13 +182,24 @@ namespace netcore.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("netcore.Models.AccountRole", b =>
+                {
+                    b.HasOne("netcore.Models.Account", "Accounts")
+                        .WithMany("AccountRoles")
+                        .HasForeignKey("NIK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("netcore.Models.Role", "Roles")
-                        .WithMany("Account")
+                        .WithMany("AccountRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Person");
+                    b.Navigation("Accounts");
 
                     b.Navigation("Roles");
                 });
@@ -215,6 +236,8 @@ namespace netcore.Migrations
 
             modelBuilder.Entity("netcore.Models.Account", b =>
                 {
+                    b.Navigation("AccountRoles");
+
                     b.Navigation("Profilling");
                 });
 
@@ -230,7 +253,7 @@ namespace netcore.Migrations
 
             modelBuilder.Entity("netcore.Models.Role", b =>
                 {
-                    b.Navigation("Account");
+                    b.Navigation("AccountRoles");
                 });
 
             modelBuilder.Entity("netcore.Models.University", b =>

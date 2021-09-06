@@ -1,6 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using netcore.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using static netcore.Models.Person;
+
 namespace netcore.ViewModel
 {
     public class RegisterVM
@@ -25,7 +31,11 @@ namespace netcore.ViewModel
 
         [Required]
         public DateTime BirthDate { get; set; }
-        [Required, Range(0, 1, ErrorMessage = "Gender harus diantara 0 atau 1")]
+
+        // [Required, Range(0, 1, ErrorMessage = "Gender harus diantara 0 atau 1")]
+        // // [StringLength(10)]
+        // [JsonConverter(typeof(StringEnumConverter))]
+        // public gender Gender { get; set; }
         public int Gender { get; set; }
 
         [Required(ErrorMessage = "Salary Depan tidak boleh kosong")]
@@ -48,8 +58,8 @@ namespace netcore.ViewModel
         [Required(ErrorMessage = "UniversityId tidak boleh kosong")]
         public int UniversityId { get; set; }
 
-        [Required(ErrorMessage = "RoleId tidak boleh kosong")]
         public int RoleId { get; set; }
 
+        public ICollection<AccountRole> AccountRoles { get; set; }
     }
 }

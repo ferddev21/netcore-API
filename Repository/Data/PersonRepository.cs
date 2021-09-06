@@ -23,8 +23,10 @@ namespace netcore.Repository.Data
             var getRegisterVM = (from per in myContext.Persons
                                  join acc in myContext.Accounts on
                                  per.NIK equals acc.NIK
+                                 join accrole in myContext.AccountRoles on
+                                 acc.NIK equals accrole.NIK
                                  join role in myContext.Roles on
-                                 acc.RoleId equals role.RoleId
+                                 accrole.RoleId equals role.RoleId
                                  join prf in myContext.Profillings on
                                  acc.NIK equals prf.NIK
                                  join edu in myContext.Educations on
@@ -44,7 +46,7 @@ namespace netcore.Repository.Data
                                      Degree = edu.Degree,
                                      GPA = edu.GPA,
                                      UniversityId = edu.UniversityId,
-                                     RoleId = acc.RoleId
+                                     AccountRoles = acc.AccountRoles
                                  }).ToList();
 
 
@@ -66,14 +68,14 @@ namespace netcore.Repository.Data
             return (from per in myContext.Persons
                     join acc in myContext.Accounts on
                     per.NIK equals acc.NIK
+                    join accrole in myContext.AccountRoles on
+                    acc.NIK equals accrole.NIK
                     join role in myContext.Roles on
-                    acc.RoleId equals role.RoleId
+                    accrole.RoleId equals role.RoleId
                     join prf in myContext.Profillings on
                     acc.NIK equals prf.NIK
                     join edu in myContext.Educations on
                     prf.EducationId equals edu.EducationId
-                    join univ in myContext.Universitys on
-                    edu.UniversityId equals univ.UniversityId
                     select new RegisterVM
                     {
                         NIK = per.NIK,
@@ -88,9 +90,21 @@ namespace netcore.Repository.Data
                         Password = acc.Password,
                         Degree = edu.Degree,
                         GPA = edu.GPA,
-                        UniversityId = univ.UniversityId,
-                        RoleId = acc.RoleId
+                        UniversityId = edu.UniversityId,
+                        AccountRoles = acc.AccountRoles
                     }).Where(per => per.NIK == NIK).First();
+        }
+
+        public int AddNewAccountRole(string nIk, int RoleId)
+        {
+            //save entity accountrole
+            myContext.AccountRoles.Add(new AccountRole()
+            {
+                NIK = nIk,
+                RoleId = RoleId
+            });
+            return myContext.SaveChanges();
+
         }
 
         public int InsertRegister(RegisterVM registerVM)
@@ -110,12 +124,20 @@ namespace netcore.Repository.Data
             });
             myContext.SaveChanges();
 
+
             //save enitity account
             myContext.Accounts.Add(new Account()
             {
                 NIK = registerVM.NIK,
                 Password = BCrypt.Net.BCrypt.HashPassword(registerVM.Password, BCrypt.Net.BCrypt.GenerateSalt(12)),
-                RoleId = registerVM.RoleId
+            });
+            myContext.SaveChanges();
+
+            //save entity accountrole
+            myContext.AccountRoles.Add(new AccountRole()
+            {
+                NIK = registerVM.NIK,
+                RoleId = registerVM.RoleId,
             });
             myContext.SaveChanges();
 
@@ -133,6 +155,9 @@ namespace netcore.Repository.Data
 
             return myContext.SaveChanges();
         }
+
+
+
 
         public string ValidationUnique(string nik, string email, string phone)
         {

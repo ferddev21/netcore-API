@@ -5,7 +5,7 @@ using netcore.Repository.Data;
 
 namespace netcore.Base.Controllers
 {
-    [Authorize(Roles = "Manager")]
+    // [Authorize(Roles = "Manager")]
     [ApiController]
     [Route("api/[controller]")]
     public class RoleController : BaseController<Role, RoleRepository, int>

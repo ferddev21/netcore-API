@@ -16,5 +16,7 @@ namespace netcore.ViewModel
         public string NewPassword { get; set; }
 
         public string OTP { get; set; }
+
+        public int RoleId { get; set; }
     }
 }

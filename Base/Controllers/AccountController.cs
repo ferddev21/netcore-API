@@ -1,35 +1,48 @@
 using System;
 using System.Net;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using netcore.Context;
 using netcore.Models;
 using netcore.Repository.Data;
 using netcore.Repository.StaticMethods;
 using netcore.ViewModel;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace netcore.Base.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Manajer")]
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : BaseController<Account, AccountRepository, string>
     {
-
+        public IConfiguration configuration;
+        private readonly MyContext myContext;
         private readonly AccountRepository repository;
-        public AccountController(AccountRepository repository) : base(repository)
+        public AccountController(IConfiguration configuration, MyContext myContext, AccountRepository repository) : base(repository)
         {
+            this.myContext = myContext;
             this.repository = repository;
+            this.configuration = configuration;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public ActionResult Login(LoginVM loginVM)
         {
             try
             {
                 //check data by email
-                var checkdata = repository.Login(loginVM);
+                var checkdata = repository.FindByEmail(loginVM.Email);
                 if (checkdata == null)
                 {
                     return StatusCode((int)HttpStatusCode.BadRequest, new
@@ -49,12 +62,46 @@ namespace netcore.Base.Controllers
                     });
                 }
 
+                //------Create Token----//
+
+                //getRole
+                var getRole = repository.getRole(checkdata.NIK);
+
+                if (getRole == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new
+                    {
+                        status = (int)HttpStatusCode.BadRequest,
+                        message = "Role anda tidak ditemukan"
+                    });
+                }
+
+                //create claims details based on the user information
+                var identity = new ClaimsIdentity("JWT");
+
+                identity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, configuration["Jwt:Subject"]));
+                identity.AddClaim(new Claim("email", checkdata.Email));
+                foreach (var item in getRole)
+                {
+                    identity.AddClaim(new Claim("role", item.RoleName));
+                }
+
+                //create token
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+                var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var token = new JwtSecurityToken(
+                    configuration["Jwt:Issuer"], configuration["Jwt:Audience"],
+                    identity.Claims,
+                    expires: DateTime.UtcNow.AddDays(1),
+                    signingCredentials: signIn
+                );
+
                 return StatusCode((int)HttpStatusCode.OK, new
                 {
                     status = (int)HttpStatusCode.OK,
                     message = "Success Login",
+                    token = new JwtSecurityTokenHandler().WriteToken(token)
                 });
-
             }
             catch (System.Exception e)
             {
@@ -65,9 +112,6 @@ namespace netcore.Base.Controllers
                 });
             }
         }
-
-
-
 
         [HttpPost("SendPasswordResetCode")]
         public ActionResult SendPasswordResetCode(LoginVM loginVM)

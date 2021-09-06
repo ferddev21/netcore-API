@@ -5,7 +5,7 @@ using netcore.Repository.Data;
 
 namespace netcore.Base.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ProfillingController : BaseController<Profilling, ProfillingRepository, string>
