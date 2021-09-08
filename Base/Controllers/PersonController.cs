@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using netcore.Models;
 using netcore.Repository.Data;
@@ -7,7 +8,7 @@ using netcore.ViewModel;
 
 namespace netcore.Base.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PersonController : BaseController<Person, PersonRepository, string>
@@ -20,6 +21,7 @@ namespace netcore.Base.Controllers
             this.roleRepository = roleRepository;
         }
 
+        [EnableCors("AllowOrigin")]
         [HttpGet("register")]
         public ActionResult GetRegister()
         {

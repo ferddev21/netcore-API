@@ -23,10 +23,6 @@ namespace netcore.Repository.Data
             var getRegisterVM = (from per in myContext.Persons
                                  join acc in myContext.Accounts on
                                  per.NIK equals acc.NIK
-                                 join accrole in myContext.AccountRoles on
-                                 acc.NIK equals accrole.NIK
-                                 join role in myContext.Roles on
-                                 accrole.RoleId equals role.RoleId
                                  join prf in myContext.Profillings on
                                  acc.NIK equals prf.NIK
                                  join edu in myContext.Educations on
@@ -54,7 +50,7 @@ namespace netcore.Repository.Data
             {
                 return null;
             }
-            return getRegisterVM.ToList();
+            return getRegisterVM;
         }
 
         public RegisterVM GetRegister(string NIK)
@@ -68,10 +64,10 @@ namespace netcore.Repository.Data
             return (from per in myContext.Persons
                     join acc in myContext.Accounts on
                     per.NIK equals acc.NIK
-                    join accrole in myContext.AccountRoles on
-                    acc.NIK equals accrole.NIK
-                    join role in myContext.Roles on
-                    accrole.RoleId equals role.RoleId
+                    // join accrole in myContext.AccountRoles on
+                    // acc.NIK equals accrole.NIK
+                    // join role in myContext.Roles on
+                    // accrole.RoleId equals role.RoleId
                     join prf in myContext.Profillings on
                     acc.NIK equals prf.NIK
                     join edu in myContext.Educations on
