@@ -10,7 +10,7 @@ namespace netcore.Repository.StaticMethods
         public static void SendEmail(string email, string subject, string htmlMessage)
         {
             string fromMail = "ferddev21test@gmail.com";
-            string fromPassword = "ferdiandrummer";
+            string fromPassword = "";
 
             MailMessage message = new MailMessage();
             message.From = new MailAddress(fromMail);
